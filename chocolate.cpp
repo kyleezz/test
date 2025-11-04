@@ -1,9 +1,10 @@
 #include <iostream>
 using namespace std;
-
+// https://github.com/kyleezz/test/blob/main/chocolate.cpp
 // chocolate_bar - an array which represents the tastiness
 // value of each 'block' of the chocolate bar
 int chocolate_bar[100005];
+int answer = 1000000000;
 
 int main() {
     // n - length of the chocolate bar
@@ -26,5 +27,15 @@ int main() {
 
         // try calculating the tastiness value of the second half
         // yourself!
+        int tastiness_value_second_half = 0;
+        for (int j = i + 1; j <= n; j++) {
+            tastiness_value_second_half += chocolate_bar[j];
+        }
+
+        int difference = abs(tastiness_value_second_half - tastiness_value_first_half);
+
+        answer = min(answer, difference);
     }
+
+    cout << answer;
 }
