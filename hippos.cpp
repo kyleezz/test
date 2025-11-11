@@ -26,9 +26,9 @@ int main() {
 
     // similarly, all the flowers to the right of the rightmost region
     // can be saved using a single fence
-    int rightmost_region = n - hippos[n];
+    int rightmost_region = n - hippos[h];
 
-    for (int i = 1; i <= n; i++) {
+    for (int i = 1; i < h; i++) {
         middle_region[i] = hippos[i + 1] - hippos[i] - 1;
     }
 
