@@ -1,0 +1,96 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+// hippos is an array that keeps track of the location of every hippo
+int hippos[200005];
+
+// middle_region is an array that keeps track of how many flowers are in each
+// of the middle regions
+int middle_region[200005];
+
+int main() {
+    // N - number of flowers
+    // H - number of hippos
+    // F - number of fences
+    int n, h, f;
+    cin >> n >> h >> f;
+
+    for (int i = 1; i <= h; i++) {
+        cin >> hippos[i];
+    }
+
+    // all the flowers to the left of the leftmost region can be saved
+    // using a single fence
+    int leftmost_region = hippos[1] - 1;
+
+    // similarly, all the flowers to the right of the rightmost region
+    // can be saved using a single fence
+    int rightmost_region = n - hippos[h];
+
+    for (int i = 1; i < h; i++) {
+        middle_region[i] = hippos[i + 1] - hippos[i] - 1;
+    }
+
+    // Sort it in reverse order so the biggest is at the front
+    sort(middle_region + 1, middle_region + h);
+    reverse(middle_region + 1, middle_region + h);
+
+    // Now, you know how many flowers are in the leftmost and rightmost regions (you
+    // need a single fence to save either region)
+
+    // You also know how many flowers are in each of the middle_region, this
+    // information is stored in the array.
+
+    // Now, try to maximise how many flowers you can save
+
+    // We should either take
+    // A - None of the leftmost / rightmost end
+    // B - One of the leftmost / rightmost end
+    // C - Both of the leftmost / rightmost end
+
+    int best_answer = 0;
+
+    // Case A:
+    int total_saved_a = 0;
+    int current_fences_left = f;
+    int i = 1;
+    while (current_fences_left >= 2 && i < h) {
+        current_fences_left -= 2;
+        total_saved_a += middle_region[i];
+        i += 1;
+    }
+
+    best_answer = total_saved_a;
+
+    // Case B:
+    if (f >= 1) {
+        int total_saved_b = max(leftmost_region, rightmost_region);
+        current_fences_left = f - 1;
+        int i = 1;
+        while (current_fences_left >= 2 && i < h) {
+            current_fences_left -= 2;
+            total_saved_b += middle_region[i];
+            i += 1;
+        }
+
+        best_answer = max(best_answer, total_saved_b);
+    }
+
+    // Case C:
+    if (f >= 2) {
+        int total_saved_c = leftmost_region + rightmost_region;
+        current_fences_left = f - 2;
+        int i = 1;
+        while (current_fences_left >= 2 && i < h) {
+            current_fences_left -= 2;
+            total_saved_c += middle_region[i];
+            i += 1;
+        }
+
+        best_answer = max(best_answer, total_saved_c);
+    }
+
+    cout << best_answer;
+}
